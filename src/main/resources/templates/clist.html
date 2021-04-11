@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org" xmlns:v-on="http://www.w3.org/1999/xhtml"
+      xmlns:v-bind="http://www.w3.org/1999/xhtml"  id="listc">
+
+<head>
+    <meta charset="UTF-8">
+    <title>客户列表</title>
+    <!--    <script th:src="@{/static/js/vue.min.js}"></script>-->
+    <!--    <script th:src="@{/static/js/axios.min.js}"></script>-->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.staticfile.org/foundation/5.5.3/css/foundation.min.css">
+    <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://cdn.staticfile.org/foundation/5.5.3/js/foundation.min.js"></script>
+    <script src="https://cdn.staticfile.org/foundation/5.5.3/js/vendor/modernizr.js"></script>
+    <script>
+        $(document).ready(function() {
+            $(document).foundation();
+        })
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios@0.21.1/dist/axios.min.js"></script>
+</head>
+<body>
+<div id="clist" class="row">
+    <br>
+    <h3>客户列表</h3>
+    <hr>
+    <div>
+        <div>
+            <form >
+                <div>
+                    <fieldset>
+                        <legend>查找客户</legend>
+                        <div class="large-12 columns">
+                            <div class="row collapse">
+                                <div class="small-10 columns">
+                                    <input type="text" placeholder="搜索客户" v-model="keyword">
+                                </div>
+                                <div class="small-2 columns">
+                                <div class="button postfix" v-on:click="listByKeyword($event)">
+                                    <span >搜索</span>
+                                </div>
+                            </div>
+                        </div>
+                </div>
+
+                    </fieldset>
+                </div>
+            </form>
+        </div>
+        <br>
+
+            <table class="responsive">
+                <thead th:each="customer : ${customers}" style="width: 100%">
+                <tr>
+                    <th><span th:text="${customer.getName()}" th:attr="cid = ${customer.getId()}"></span></th>
+                    <th><a>合同</a></th>
+                    <th><a th:href="'/order/' + ${customer.id}">历史工单</a></th>
+                    <th><a th:href="'/order/add/' + ${customer.id}">更新维护</a></th>
+                </tr>
+                </thead>
+            </table>
+
+    </div>
+</div>
+
+
+
+
+</body>
+<script>
+    new Vue({
+        el:'#clist',
+        data:{
+            keyword:''
+        },
+        methods:{
+            listByKeyword:function (e) {
+                const word = this.keyword;
+                axios.get("/list/" + word).then(res => {
+                    document.getElementById("listc").innerHTML = res.data;
+                })
+            }
+        }
+    })
+</script>
+</html>

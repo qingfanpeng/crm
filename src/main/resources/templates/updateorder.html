@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org" xmlns:v-on="http://www.w3.org/1999/xhtml"
+      xmlns:v-bind="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="UTF-8">
+    <title>修改工单</title>
+<!--    <script th:src="@{~/js/vue.min.js}"></script>-->
+<!--    <script th:src="@{~/js/axios.min.js}"></script>-->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios@0.21.1/dist/axios.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdn.staticfile.org/foundation/5.5.3/css/foundation.min.css">
+    <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://cdn.staticfile.org/foundation/5.5.3/js/foundation.min.js"></script>
+    <script src="https://cdn.staticfile.org/foundation/5.5.3/js/vendor/modernizr.js"></script>
+    <script>
+        $(document).ready(function() {
+            $(document).foundation();
+        })
+    </script>
+</head>
+<body>
+
+<div id="uo" class="row">
+    <br>
+    <h3>修改工单</h3>
+    <hr>
+    <form th:action="'/order/update/' + ${customer.id}" method="post">
+        <input type="hidden" name="id" th:value="${updateOrder.id}">
+        <input type="hidden" name="addTime" th:value="${updateOrder.addTime}">
+        <input type="hidden" name="customerId" th:value="${updateOrder.customerId}">
+
+<!--        <input type="checkbox" id="visit" name="visit" value="VISIT"><label for="visit">上门</label>-->
+<!--        <input type="checkbox" id="visit" name="visit" value="VISIT"><label for="visit">上门</label>-->
+<!--        <input type="checkbox" id="visit" name="visit" value="VISIT"><label for="visit">上门</label>-->
+        工作内容：
+        <input type="radio" name="workContent" id="workDesc_1" value="新装" th:checked="${updateOrder.workContent == '新装'}"><label for="workDesc_1">新装</label>
+        <input type="radio" name="workContent" id="workDesc_2" value="更新" th:checked="${updateOrder.workContent == '更新'}"><label for="workDesc_2">更新</label>
+        <input type="radio" name="workContent" id="workDesc_3" value="故障" th:checked="${updateOrder.workContent == '故障'}"><label for="workDesc_3">故障</label><br>
+
+        维护方式：
+        <select name="handlerMethod" >
+<!--            wayStatu = {index = 1, count = 2, size = 4, current = REMOTE}-->
+<!--            <option th:each="way : ${T(com.peng.crm.pojo.HandlerMethod).values()}"  th:value="${wayStat.current}" th:text="${wayStat}" th:selected="wayStat"></option>-->
+            <option th:each="way : ${T(com.peng.crm.pojo.HandlerMethod).values()}"  th:value="${wayStat.current}" th:text="${way.VISIT == wayStat.current ? '上门' : (way.REMOTE == wayStat.current ? '远程' : (way.EXPRESS == wayStat.current ? '寄盘' : (way.CALL == wayStat.current ? '电话' : '')))}" th:selected="${updateOrder.getHandlerMethod() == wayStat.current}"></option>
+<!--            <option  th:value="${handler.REMOTE}">远程</option>-->
+<!--            <option  th:value="${handler.EXPRESS}">寄盘</option>-->
+<!--            <option  th:value="${handler.CALL}">电话</option>-->
+<!--            <option value="VISIT"  th:selected="${updateOrder.handlerMethod == } ? 'selected' : ''">上门</option>-->
+<!--            <option value="REMOTE" th:selected="${updateOrder.handlerMethod == 'REMOTE'} ? 'selected' : ''">远程</option>-->
+<!--            <option value="EXPRESS" th:selected="${updateOrder.handlerMethod == 'EXPRESS'} ? 'selected' : ''">寄盘</option>-->
+<!--            <option value="CALL" th:selected="${updateOrder.handlerMethod == 'CALL'} ? 'selected' : ''">电话</option>-->
+        </select><br>
+        对接人：<input name="contact" type="text" th:value="${customer.getContact()}"><br>
+        联系方式：<input name="phone" type="text" th:value="${customer.getPhone()}"><br>
+        程序：
+        <select name="productionId">
+            <option  th:each="product : ${allproductions}" th:selected="${customer.productionId == product.id}" th:text="${product.name}" th:value="${product.id}"></option>
+        </select><br>
+
+        <div th:if="${updateOrder.workContent.equals('新装') || updateOrder.workContent.equals('更新')}">
+            期刊-更新批次：<input name="periodical" type="text" th:value="${updateOrder.periodical}"><br>
+            学位-更新批次：<input name="thesis" type="text" th:value="${updateOrder.thesis}"><br>
+            会议-更新批次：<input name="conference" type="text" th:value="${updateOrder.conference}"><br>
+            专利-更新批次：<input name="patent" type="text" th:value="${updateOrder.patent}"><br>
+            法规-更新批次：<input name="law" type="text" th:value="${updateOrder.law}"><br>
+            标准-更新批次：<input name="standard" type="text" th:value="${updateOrder.standard}"><br>
+            图书-更新批次：<input name="book" type="text" th:value="${updateOrder.book}"><br>
+            视频-更新批次：<input name="video" type="text" th:value="${updateOrder.video}"><br>
+            其他-更新批次：<input name="other" type="text" th:value="${updateOrder.other}"><br>
+            全文状态：<input name="fulltextStatus" type="text" th:value="${updateOrder.fulltextStatus}"><br>
+        </div>
+
+        <div th:if="${!updateOrder.workContent.equals('新装') && !updateOrder.workContent.equals('更新')}">
+            故障描述：<input name="errorDesc" type="text" th:value="${updateOrder.errorDesc}"><br>
+        </div>
+
+        备注：<input name="notes" type="text" th:value="${updateOrder.notes}"><br>
+        工作进度：
+<!--        <input type="radio" id="status_1" name="status" th:value="${T(com.peng.crm.pojo.Status).DOING}" th:checked="${updateOrder.status} == ${T(com.peng.crm.pojo.Status).DOING}"><label for="status_1">进行中</label>-->
+        <input type="radio" id="status_1" name="status" th:value="${T(com.peng.crm.pojo.Status).DOING}" th:checked="${updateOrder.getStatus() == T(com.peng.crm.pojo.Status).DOING}"><label for="status_1">进行中</label>
+        <input type="radio" id="status_2" name="status" th:value="${T(com.peng.crm.pojo.Status).FINISH}" th:checked="${updateOrder.status == T(com.peng.crm.pojo.Status).FINISH}"><label for="status_2">完成</label><br>
+        <br>
+        <input class="button submit" type="submit" value="保存修改">
+    </form>
+</div>
+</body>
+</html>

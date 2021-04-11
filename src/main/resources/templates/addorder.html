@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org" xmlns:v-on="http://www.w3.org/1999/xhtml"
+      xmlns:v-bind="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="UTF-8">
+    <title>新建工单</title>
+<!--    <script th:src="@{/static/js/vue.min.js}"></script>-->
+<!--    <script th:src="@{/static/js/axios.min.js}"></script>-->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios@0.21.1/dist/axios.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdn.staticfile.org/foundation/5.5.3/css/foundation.min.css">
+    <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://cdn.staticfile.org/foundation/5.5.3/js/foundation.min.js"></script>
+    <script src="https://cdn.staticfile.org/foundation/5.5.3/js/vendor/modernizr.js"></script>
+    <script>
+        $(document).ready(function() {
+            $(document).foundation();
+        })
+    </script>
+</head>
+<body>
+
+<div id="uo" class="row">
+    <br>
+    <h3>新建工单</h3>
+    <hr>
+    <form method="post" th:action="'/order/save/' + ${customer.id}"  >
+        <!--        <input type="checkbox" id="visit" name="visit" value="VISIT"><label for="visit">上门</label>-->
+        <!--        <input type="checkbox" id="visit" name="visit" value="VISIT"><label for="visit">上门</label>-->
+        <!--        <input type="checkbox" id="visit" name="visit" value="VISIT"><label for="visit">上门</label>-->
+        工作内容：
+        <input v-model="choice" type="radio" name="workContent" id="workDesc_1" th:value="新装"><label for="workDesc_1">新装</label>
+        <input v-model="choice" type="radio" name="workContent" id="workDesc_2" th:value="更新"><label for="workDesc_2">更新</label>
+        <input v-model="choice" type="radio" name="workContent" id="workDesc_3" th:value="故障"><label for="workDesc_3">故障</label><br>
+<!--        <span v-on:click="change"><input type="radio" name="workContent" id="workDesc_3" value="故障"><label for="workDesc_3">故障</label></span><br>-->
+        维护方式：
+        <select name="handlerMethod" >
+            <!--            wayStatu = {index = 1, count = 2, size = 4, current = REMOTE}-->
+            <!--            <option th:each="way : ${T(com.peng.crm.pojo.HandlerMethod).values()}"  th:value="${wayStat.current}" th:text="${wayStat}" th:selected="wayStat"></option>-->
+            <option th:each="way : ${T(com.peng.crm.pojo.HandlerMethod).values()}"  th:value="${wayStat.current}" th:text="${way.VISIT == wayStat.current ? '上门' : (way.REMOTE == wayStat.current ? '远程' : (way.EXPRESS == wayStat.current ? '寄盘' : (way.CALL == wayStat.current ? '电话' : '')))}"></option>
+            <!--            <option  th:value="${handler.REMOTE}">远程</option>-->
+            <!--            <option  th:value="${handler.EXPRESS}">寄盘</option>-->
+            <!--            <option  th:value="${handler.CALL}">电话</option>-->
+            <!--            <option value="VISIT"  th:selected="${updateOrder.handlerMethod == } ? 'selected' : ''">上门</option>-->
+            <!--            <option value="REMOTE" th:selected="${updateOrder.handlerMethod == 'REMOTE'} ? 'selected' : ''">远程</option>-->
+            <!--            <option value="EXPRESS" th:selected="${updateOrder.handlerMethod == 'EXPRESS'} ? 'selected' : ''">寄盘</option>-->
+            <!--            <option value="CALL" th:selected="${updateOrder.handlerMethod == 'CALL'} ? 'selected' : ''">电话</option>-->
+        </select><br>
+        对接人：<input th:name="contact" type="text" th:value="${customer.getContact()}"><br>
+        联系方式：<input th:name="phone" type="text" th:value="${customer.getPhone()}"><br>
+        程序：
+        <select th:name="productionId">
+            <option  th:each="product : ${allproductions}" th:text="${product.name}" th:value="${product.id}" th:selected="${customer.productionId == product.id}"></option>
+        </select><br>
+
+        <div>
+            <div v-if="choice === '更新' || choice === '新装'">
+                期刊-更新批次：<input th:name="periodical" type="text"><br>
+                学位-更新批次：<input th:name="thesis" type="text"><br>
+                会议-更新批次：<input th:name="conference" type="text"><br>
+                专利-更新批次：<input th:name="patent" type="text"><br>
+                法规-更新批次：<input th:name="law" type="text"><br>
+                标准-更新批次：<input th:name="standard" type="text"><br>
+                图书-更新批次：<input th:name="book" type="text"><br>
+                视频-更新批次：<input th:name="video" type="text"><br>
+                其他-更新批次：<input th:name="other" type="text"><br>
+                全文状态：<input th:name="fulltextStatus" type="text"><br>
+            </div>
+            <div v-else>
+                故障描述：<input th:name="errorDesc" type="text">
+            </div>
+        </div>
+
+
+        备注：<input th:name="notes" type="text"><br>
+        工作进度：
+        <!--        <input type="radio" id="status_1" name="status" th:value="${T(com.peng.crm.pojo.Status).DOING}" th:checked="${updateOrder.status} == ${T(com.peng.crm.pojo.Status).DOING}"><label for="status_1">进行中</label>-->
+        <input type="radio" id="status_1" name="status" th:value="${T(com.peng.crm.pojo.Status).DOING}"><label for="status_1">进行中</label>
+        <input type="radio" id="status_2" name="status" th:value="${T(com.peng.crm.pojo.Status).FINISH}"><label for="status_2">完成</label><br>
+        <br>
+        <input class="button submit" type="submit" value="保存修改">
+    </form>
+</div>
+<script>
+    var uo = new Vue({
+        el:"#uo",
+        data: {
+            choice:'更新',
+        },
+        // methods:{
+        //     change : function () {
+        //         this.$refs.guzhang.innerHTML = '        <div>\n' +
+        //             '            故障描述：<input type="text" value=""><br>\n' +
+        //             '        </div>'
+        //     }
+        // }
+    })
+</script>
+</body>
+</html>

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>历史工单</title>
+
+<!--    <script src="../js/vue.min.js" th:src="@{~/js/vue.min.js}"></script>-->
+<!--    <script src="../js/axios.min.js" th:src="@{~/js/axios.min.js}"></script>-->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios@0.21.1/dist/axios.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdn.staticfile.org/foundation/5.5.3/css/foundation.min.css">
+    <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://cdn.staticfile.org/foundation/5.5.3/js/foundation.min.js"></script>
+    <script src="https://cdn.staticfile.org/foundation/5.5.3/js/vendor/modernizr.js"></script>
+    <script>
+        $(document).ready(function() {
+            $(document).foundation();
+        })
+    </script>
+</head>
+<body>
+<div  id="app" ref="one" class="row">
+    <br>
+    <h3>历史工单</h3>
+    <br>
+<!--    <hr>-->
+    <!--<ul id="app">-->
+    <!--    <div th:each="updateOrder : ${updateOrders}">-->
+    <!--        <li th:text="'NF-'+ ${updateOrder.getAddTime()} + '-' + ${updateOrder.id}" th:attr="cid = ${updateOrder.id}"  v-on:click="readOrder()"></li>-->
+    <!--        <span>修改</span>-->
+    <!--        <span>删除</span>-->
+    <!--    </div>-->
+    <!--</ul>-->
+    <h5 class="subheader" th:text="${customer.name}"></h5>
+    <hr>
+
+        <table >
+            <thead th:each="updateOrder : ${updateOrders}">
+            <tr>
+                <th><span th:text="'NF' + ${updateOrder.addTime} + '-' + ${updateOrder.id}"></span></th>
+                <th><span id="ss1" ref="oo1" th:attr="oid = ${updateOrder.id}" v-on:click="updatee($event)">修改</span></th>
+                <th><span id="ss2" ref="oo2" th:attr="oid = ${updateOrder.id}, ccid = ${updateOrder.customerId}" v-on:click="deletee($event)">删除</span></th>
+<!--                <span v-on:click="deletee(updateOrder.customerId,updateOrd/er.id)">删除</span>-->
+                <!--        <span v-model="updateOrders">{{updateOrders}}</span>-->
+            </tr>
+            </thead>
+        </table>
+
+        <div></div>
+    <!--    <div>-->
+    <!--        <peng></peng>-->
+    <!--    </div>-->
+
+</div>
+
+</body>
+<script th:inline="javascript">
+    // Vue.component("peng",{
+    //     template:"<div>{{updateee}}</div>"
+    // })
+    var updateOrders1=[[${updateOrders}]];
+
+    var vm = new Vue({
+        el:"#app",
+        data:{
+            updateOrders:[[${updateOrders}]]
+        },
+
+        methods:{
+
+            updatee:function (e) {
+                axios.get("update/" + e.target.getAttribute("oid")).then(res => {
+                    // alert();
+                    // this.$refs.one.innerHTML = res.data;
+                    document.write(res.data);
+                })
+            },
+            deletee:function (e) {
+                axios({
+                    method:"delete",
+                    url:"delete/" + e.target.getAttribute("ccid") +"/" + e.target.getAttribute("oid")
+                }).then(res => {
+                    // axios.get(''+e.target.getAttribute("ccid")).then(response => {
+                    //     // alert(document);
+                    //     document.write(response.data);
+                    //
+                    // })
+                    location.reload();
+                })
+
+            }
+        }
+    })
+</script>
+</html>
+

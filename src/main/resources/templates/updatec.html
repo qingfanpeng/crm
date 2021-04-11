@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>添加/修改客户</title>
+
+    <link rel="stylesheet" href="https://cdn.staticfile.org/foundation/5.5.3/css/foundation.min.css">
+    <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://cdn.staticfile.org/foundation/5.5.3/js/foundation.min.js"></script>
+    <script src="https://cdn.staticfile.org/foundation/5.5.3/js/vendor/modernizr.js"></script>
+    <script>
+        $(document).ready(function() {
+            $(document).foundation();
+        })
+    </script>
+</head>
+<body>
+<h3>添加/修改客户</h3>
+<form action="">
+<!--    <input type="hidden" th:attr="id=${}">-->
+    客户名称：<input type="text"><br>
+    所属地区：<input type="text"><br>
+    所属行业：<input type="text"><br>
+    联系人：<input type="text"><br>
+    联系方式：<input type="text"><br>
+    <input type="submit" value="添加">
+    <input class="button submit" type="submit" value="修改">
+</form>
+</body>
+</html>

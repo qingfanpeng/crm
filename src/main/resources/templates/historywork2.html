@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>历史工单</title>
+
+<!--    <script src="/js/vue.min.js" ></script>-->
+<!--    <script src="/js/axios.min.js" ></script>-->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios@0.21.1/dist/axios.min.js"></script>
+</head>
+<body>
+<div  id="app">
+    <h3>历史工单</h3>
+    <div></div>
+    <ul>
+        <div>{{ test }}</div>
+
+        <span id="ss1" ref="oo1" v-on:click="updatee(10)">修改</span>
+        <span id="ss2" ref="oo2" v-on:click="deletee(1,10)">删除</span>
+
+    </ul>
+</div>
+
+</body>
+<script th:inline="javascript">
+    // Vue.component("peng",{
+    //     template:"<div>{{updateOrders1}}</div>"
+    // })
+    // var updateOrders2=[[${updateOrders}]];
+
+
+
+
+    var vm = new Vue({
+        el:"#app",
+        data:{
+            test:"666"
+        },
+
+        methods:{
+
+            updatee:function (a) {
+                alert("666888");
+                axios.get("update/" + a).then(res => {
+                    this.test = [[${updateOrders}]];
+                //     // this.$refs.one.innerHTML = res.data;
+                    document.write(res.data);
+                })
+            }
+            ,
+            deletee:function (a,b) {
+                axios.delete("delete/" + a + "/" +7).then(res => {
+                    alert(999);
+                    console.log(res.data);
+                })
+            }
+        }
+    })
+</script>
+</html>
+

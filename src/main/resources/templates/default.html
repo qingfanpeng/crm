@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org" xmlns:v-on="http://www.w3.org/1999/xhtml"
+      xmlns:v-bind="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+
+    <!-- 引入 layui.css -->
+    <link rel="stylesheet" href="//unpkg.com/layui@2.6.4/dist/css/layui.css">
+    <!-- 引入 layui.js -->
+    <script src="//unpkg.com/layui@2.6.4/dist/layui.js"></script>
+
+<!--    <link rel="stylesheet" href="https://purecss.io/css/pure/grids-responsive-min.css">-->
+<!--    <link rel="stylesheet" href="https://purecss.io/css/pure/pure-min.css" integrity="sha384-CCTZv2q9I9m3UOxRLaJneXrrqKwUNOzZ6NGEUMwHtShDJ+nCoiXJCAgi05KfkLGY" crossorigin="anonymous">-->
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.staticfile.org/foundation/5.5.3/css/foundation.min.css">
+    <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://cdn.staticfile.org/foundation/5.5.3/js/foundation.min.js"></script>
+    <script src="https://cdn.staticfile.org/foundation/5.5.3/js/vendor/modernizr.js"></script>
+<!--    <link rel="stylesheet" href="../styles.css">-->
+    <!--    <script th:src="@{/static/js/vue.min.js}"></script>-->
+<!--        <script th:src="@{/static/js/axios.min.js}"></script>-->
+<!--        <script src="/static/js/axios.min.js"></script>-->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios@0.21.1/dist/axios.min.js"></script>
+</head>
+<body>
+<!--<div id="layout"  style="background-image: url('./1.png')">-->
+<div id="layout">
+
+    <div  class="row">
+        <br>
+        <h3>客户管理系统</h3>
+        <hr>
+        <form>
+<!--            <fieldset class="layui-elem-field layui-field-title" style="margin-top: 30px;">-->
+<!--                <legend>查找客户</legend>-->
+                <br>
+                <div  class="row">
+                    <div class="large-12 columns">
+                        <div class="row collapse">
+                            <div class="small-10 columns">
+                                 <input type="text" placeholder="搜索客户" v-model="keyword">
+                            </div>
+                            <div class="small-2 columns">
+                                <a class="button postfix" v-on:click="listByKeyword($event)">搜索</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+<!--            </fieldset>-->
+        </form>
+    </div>
+        <br>
+        <div class="row">
+            <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+                <ul class="layui-tab-title">
+                    <li class="layui-this" style="width: 45%">地区</li>
+                    <li  style="width: 45%">行业</li>
+                </ul>
+                <div class="layui-tab-content">
+                    <div class="layui-tab-item layui-show">
+                        <div th:each="province : ${provinces}">
+                            <blockquote class="layui-elem-quote layui-quote-nm" th:text="${province.name}" th:attr="pid = ${province.id}" v-on:click="listByProvince($event)"></blockquote>
+                        </div>
+                    </div>
+                    <div class="layui-tab-item">
+                        <div  th:each="industry : ${industries}">
+                            <blockquote class="layui-elem-quote layui-quote-nm" th:text="${industry.name}" th:attr="iid = ${industry.id}" v-on:click="listByIndustry($event)"></blockquote>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+<!--            vue实现方式-->
+            <!--
+                            <div class="layui-tab-content">
+                    <div class="layui-tab-item layui-show">
+                            <ul class="pricing-table" th:each="province : ${provinces}">
+
+                                <li class="bullet-item" th:text="${province.name}" th:attr="pid = ${province.id}" v-on:click="listByProvince($event)"></li>
+                            </ul>
+                    </div>
+                    <div class="layui-tab-item">
+                        <ul  class="pricing-table" th:each="industry : ${industries}">
+                            <li class="bullet-item" th:text="${industry.name}" th:attr="iid = ${industry.id}" v-on:click="listByIndustry($event)"></li>
+                        </ul>
+                    </div>
+                </div>
+            <div  style="text-align:center">
+            <input class="button info" id="province" type="radio" value="0" v-model="select" style="display:none"><label class="button info" for="province" style="width:49%;margin:0 0 20px 0;">地区</label>
+            <input class="button info" id="industry" type="radio" value="1" v-model="select" style="display:none"><label class="button info" for="industry" style="width:49%;margin:0 0 20px 0;">行业</label> <br>
+            </div>
+            <div id="d1">
+                <ul class="pricing-table" v-if="select === '0'" th:each="province : ${provinces}">
+                    <li class="bullet-item" th:text="${province.name}" th:attr="pid = ${province.id}" v-on:click="listByProvince($event)"></li>
+                </ul>
+                <ul  class="pricing-table" v-if="select === '1'" th:each="industry : ${industries}">
+                    <li class="bullet-item" th:text="${industry.name}" th:attr="iid = ${industry.id}" v-on:click="listByIndustry($event)"></li>
+                </ul>
+            </div>
+            -->
+
+        </div>
+</div>
+
+
+</body>
+<script>
+    $(document).ready(function() {
+        $(document).foundation();
+    })
+</script>
+<script>
+    new Vue({
+        el:"#layout",
+        data:{
+            select:'0',
+            keyword:''
+        },
+        methods:{
+            listByProvince:function (e) {
+                axios.get("province/" + e.target.getAttribute("pid")).then(res => {
+                    document.write(res.data)
+                })
+            },
+            listByIndustry:function (e) {
+                axios({
+                    method:'get',
+                    url:"industry/" + e.target.getAttribute("iid")
+                }).then(res => {
+                    document.write(res.data)
+                })
+            },
+            listByKeyword:function (e) {
+                axios.get("/list/" + this.keyword).then(res => {
+                    document.write(res.data)
+                })
+            }
+        }
+    })
+</script>
+<script>
+    layui.use('element', function(){
+        var $ = layui.jquery
+            ,element = layui.element; //Tab的切换功能，切换事件监听等，需要依赖element模块
+
+
+    });
+</script>
+</html>

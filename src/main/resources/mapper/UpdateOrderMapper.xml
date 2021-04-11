@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.peng.crm.mapper.UpdateOrderMapper">
+    <select id="listByUTime" resultType="com.peng.crm.pojo.UpdateOrder">
+        select * from updateorder where add_time &gt;= #{begin} and  add_time &lt;= #{end}
+    </select>
+
+    <select id="listByCId" resultType="com.peng.crm.pojo.UpdateOrder">
+        select * from updateorder where customer_id = #{id}
+    </select>
+
+    <select id="listByTimeAndUser" resultType="com.peng.crm.pojo.UpdateOrder">
+        select updateorder.*,customer.name as c_name from updateorder inner join customer where updateorder.customer_id = customer.id
+        and (updateorder.add_time between #{begin} and #{end})
+        <if test="uid != null">
+            and (customer.user_id = #{uid})
+        </if>
+    </select>
+
+</mapper>
